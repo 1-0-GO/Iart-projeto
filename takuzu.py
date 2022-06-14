@@ -16,6 +16,7 @@ from search import (
     greedy_search,
     recursive_best_first_search,
 )
+import numpy as np
 
 
 class TakuzuState:
@@ -34,11 +35,16 @@ class TakuzuState:
 
 class Board:
     """Representação interna de um tabuleiro de Takuzu."""
-
+    
+    def __init__(self, matrix):
+        self.board = matrix
+        
+    def __str__(self):
+        return '\n'.join('\t'.join('%d' %x for x in y) for y in self.board.tolist())
+    
     def get_number(self, row: int, col: int) -> int:
         """Devolve o valor na respetiva posição do tabuleiro."""
-        # TODO
-        pass
+        return self.board[row, col]
 
     def adjacent_vertical_numbers(self, row: int, col: int) -> (int, int):
         """Devolve os valores imediatamente abaixo e acima,
@@ -63,9 +69,8 @@ class Board:
             > from sys import stdin
             > stdin.readline()
         """
-        # TODO
-        pass
-
+        parsed_input = sys.stdin.read().replace('\t', ' ').replace('\n', '; ')[2:-2]
+        return Board(np.matrix(parsed_input))
     # TODO: outros metodos da classe
 
 
