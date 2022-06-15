@@ -21,5 +21,6 @@ from takuzu import Board
 
 board = Board.parse_instance_from_stdin() 
 print(board)
-#print(board.board.tolist())
-print(board.get_number(0, 2))
+print(board.adjacent_vertical_numbers(3, 3))
+print(board.adjacent_horizontal_numbers(3, 3))
+print(board.get_number(3, 3))

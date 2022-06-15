@@ -36,8 +36,9 @@ class TakuzuState:
 class Board:
     """Representação interna de um tabuleiro de Takuzu."""
     
-    def __init__(self, matrix):
+    def __init__(self, matrix, size):
         self.board = matrix
+        self.size = size
         
     def __str__(self):
         return '\n'.join('\t'.join('%d' %x for x in y) for y in self.board.tolist())
@@ -49,14 +50,24 @@ class Board:
     def adjacent_vertical_numbers(self, row: int, col: int) -> (int, int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
-        # TODO
-        pass
+        return self.general_adjacent_numbers(self.board.T, col, row, 1)[::-1]
 
     def adjacent_horizontal_numbers(self, row: int, col: int) -> (int, int):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
-        # TODO
-        pass
+        return self.general_adjacent_numbers(self.board, row, col, 1)
+    
+    def general_adjacent_numbers(self, matrix, row: int, col: int, radius: int):
+        adj = []
+        bounds = range(0, self.size)
+        for dx in range(0-radius, 1+radius):
+            if dx == 0:
+                continue
+            elif (col + dx) in bounds:
+                adj.append(matrix[row, col+dx])
+            else:
+                adj.append(None)
+        return tuple(adj)        
 
     @staticmethod
     def parse_instance_from_stdin():
@@ -69,8 +80,8 @@ class Board:
             > from sys import stdin
             > stdin.readline()
         """
-        parsed_input = sys.stdin.read().replace('\t', ' ').replace('\n', '; ')[2:-2]
-        return Board(np.matrix(parsed_input))
+        parsed_input = sys.stdin.read().replace('\t', ' ').replace('\n', '; ')
+        return Board(np.matrix(parsed_input[2:-2]), int(parsed_input[0]))
     # TODO: outros metodos da classe
 
 
