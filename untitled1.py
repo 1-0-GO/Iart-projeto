@@ -12,8 +12,9 @@ from takuzu import Board
 #print(sum(map(lambda x: x==2, [2,2,4,3])))
 #new_str = "2\t1\t2\t0\n2\t2\t0\t2\n2\t0\t2\t2\n1\t1\t2\t0\n".replace('\t', ' ').replace('\n', '; ')[:-2]
 #new_str = "1\t2\n3\t4\n".replace('\t', ' ').replace('\n', '; ')[:-2]
-#new_str = sys.stdin.read().replace('\t', ' ').replace('\n', '; ')[2:-2]
-#print(new_str)
+# num = int(sys.stdin.readline())
+# new_str = sys.stdin.read().replace('\t', ' ').replace('\n', '; ')[:-2]
+# print(str(num) + new_str)
 #a = np.matrix(new_str)
 #b = np.matrix('1 2; 3 4')
 #print(a)

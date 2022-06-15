@@ -84,8 +84,9 @@ class Board:
             > from sys import stdin
             > stdin.readline()
         """
+        size = int(sys.stdin.readline())
         parsed_input = sys.stdin.read().replace('\t', ' ').replace('\n', '; ')
-        return Board(np.matrix(parsed_input[2:-2]), int(parsed_input[0]))
+        return Board(np.matrix(parsed_input[:-2]), size)
     # TODO: outros metodos da classe
 
 
