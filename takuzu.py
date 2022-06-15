@@ -50,14 +50,18 @@ class Board:
     def adjacent_vertical_numbers(self, row: int, col: int) -> (int, int):
         """Devolve os valores imediatamente abaixo e acima,
         respectivamente."""
-        return self.general_adjacent_numbers(self.board.T, col, row, 1)[::-1]
+        return self.general_adjacent_numbers('v', row, col, 1)[::-1]
 
     def adjacent_horizontal_numbers(self, row: int, col: int) -> (int, int):
         """Devolve os valores imediatamente à esquerda e à direita,
         respectivamente."""
-        return self.general_adjacent_numbers(self.board, row, col, 1)
+        return self.general_adjacent_numbers('h', row, col, 1)
     
-    def general_adjacent_numbers(self, matrix, row: int, col: int, radius: int):
+    def general_adjacent_numbers(self, mode, row: int, col: int, radius: int):
+        matrix = self.board
+        if mode == 'v':
+            matrix = self.board.T
+            row, col = col, row
         adj = []
         bounds = range(0, self.size)
         for dx in range(0-radius, 1+radius):
