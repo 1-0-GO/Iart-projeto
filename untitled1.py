@@ -22,5 +22,19 @@ from takuzu import Board
 
 board = Board.parse_instance_from_stdin() 
 print(board)
-print(board.general_adjacent_numbers('v', 1, 2, 2))
-print(board.get_number(3, 3))
+# print(sum(map(lambda x: x==2, board.board[0, :])))
+#print(board.count_constraints(11, 9))
+# print(board.general_adjacent_numbers('v', 1, 2, 2))
+# print(board.get_number(3, 3))
+# twos = np.argwhere(board.board==2)
+# print(twos.tolist())
+# ls = []
+# def my_func(a):
+#     ls.append((a[0], a[1]))
+# np.apply_along_axis(my_func, 1, twos)
+# print(ls)
+# a = np.array([0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1])
+# print(np.bincount(a))
+# for i in range(3):    
+#     print(np.bincount(np.ravel(board.board[i,:])))
+print(board.possible_values(0, 0))

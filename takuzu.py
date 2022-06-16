@@ -29,6 +29,8 @@ class TakuzuState:
 
     def __lt__(self, other):
         return self.id < other.id
+    
+    
 
     # TODO: outros metodos da classe
 
@@ -71,7 +73,37 @@ class Board:
                 adj.append(matrix[row, col+dx])
             else:
                 adj.append(None)
-        return tuple(adj)        
+        return tuple(adj)      
+    
+    def get_empty_pos(self):
+        return np.argwhere(self.board==2).tolist()
+    
+    def get_bincount_of_row(self, row):
+        return np.bincount(np.ravel(self.board[row, :]))  
+    
+    def get_bincount_of_col(self, col):
+        return np.bincount(np.ravel(self.board[:, col]))  
+    
+    def count_constraints(self, row, col):
+        return sum(map(lambda x: x==2, self.general_adjacent_numbers('h', row, col, 2))) + sum(map(lambda x: x==2, self.general_adjacent_numbers('v', row, col, 2))) + bool(self.get_bincount_of_col(col)[2]) + bool(self.get_bincount_of_row(row)[2])
+     
+    def possible_values(self, row, col):
+        poss = [0, 1]
+        n = round(self.size/2)
+        bins = self.get_bincount_of_col(col), self.get_bincount_of_row(row)
+        for b in bins:
+            for i in range(2):
+                if i in poss and b[i] == n:
+                    poss.remove(i)
+        h = self.general_adjacent_numbers('h', row, col, 2)
+        v = self.general_adjacent_numbers('v', row, col, 2)
+        a = set()
+        for i in range(3):
+            if h[i] == h[i+1]:
+                a.add(h[i])
+            if v[i] == v[i+1]:
+                a.add(v[i])
+        return [elem for elem in poss if elem not in a]                        
 
     @staticmethod
     def parse_instance_from_stdin():
@@ -124,6 +156,15 @@ class Takuzu(Problem):
 
     # TODO: outros metodos da classe
 
+class UnassignedVariable:
+    
+    def __init__(self, pos, poss_vals, num_constr):
+        self.pos = pos
+        self.poss = poss_vals
+        self.num_constr = num_constr
+        
+    def __lt__(self, other):
+        return len(self.poss_vals) < len(other.poss_vals) or (len(self.poss_vals) == len(other.poss_vals) and self.num_constr > other.num_constr)
 
 if __name__ == "__main__":
     # TODO:
