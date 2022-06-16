@@ -25,14 +25,16 @@ class TakuzuState:
     def __init__(self, board):
         self.board = board
         self.id = TakuzuState.state_id
+        self.var = None
         TakuzuState.state_id += 1
 
     def __lt__(self, other):
         return self.id < other.id
     
-    
-
-    # TODO: outros metodos da classe
+    def get_var(self):
+        if self.var == None:
+            self.var = min(map(lambda x: UnassignedVariable(x, self.board.possible_values(x[0], x[1]), self.board.count_constraints(x[0], x[1])), self.board.get_empty_pos()))
+        return self.var    
 
 
 class Board:
@@ -85,16 +87,18 @@ class Board:
         return np.bincount(np.ravel(self.board[:, col]))  
     
     def count_constraints(self, row, col):
-        return sum(map(lambda x: x==2, self.general_adjacent_numbers('h', row, col, 2))) + sum(map(lambda x: x==2, self.general_adjacent_numbers('v', row, col, 2))) + bool(self.get_bincount_of_col(col)[2]) + bool(self.get_bincount_of_row(row)[2])
+        return sum(map(lambda x: x==2, self.general_adjacent_numbers('h', row, col, 2))) + sum(map(lambda x: x==2, self.general_adjacent_numbers('v', row, col, 2))) + bool(self.get_bincount_of_col(col)[2] - 1) + bool(self.get_bincount_of_row(row)[2] - 1)
      
     def possible_values(self, row, col):
         poss = [0, 1]
-        n = round(self.size/2)
+        n = self.size//2 + 1 if self.size%2 else self.size/2
         bins = self.get_bincount_of_col(col), self.get_bincount_of_row(row)
+        # check equal number of 0's and 1's
         for b in bins:
             for i in range(2):
                 if i in poss and b[i] == n:
-                    poss.remove(i)
+                    poss.remove(i)           
+        # check no more than two adjacent
         h = self.general_adjacent_numbers('h', row, col, 2)
         v = self.general_adjacent_numbers('v', row, col, 2)
         a = set()
@@ -103,7 +107,22 @@ class Board:
                 a.add(h[i])
             if v[i] == v[i+1]:
                 a.add(v[i])
-        return [elem for elem in poss if elem not in a]                        
+        poss2 = [elem for elem in poss if elem not in a] 
+        a = []
+        # check all rows and collumns are unique
+        if bins[0][2] == 1 or bins[1][2] == 1: 
+            old = self.board[row, col]
+            for val in poss2:    
+                self.board[row, col] = val
+                mat = np.unique(np.unique(self.board, axis=1), axis=0)
+                if mat.shape != self.board.shape:
+                    a.append(val)
+            self.board[row, col] = old
+        return [elem for elem in poss2 if elem not in a]        
+            
+    
+    def insert(self, row, col, num):
+        self.board[row, col] = num                      
 
     @staticmethod
     def parse_instance_from_stdin():
@@ -119,52 +138,54 @@ class Board:
         size = int(sys.stdin.readline())
         parsed_input = sys.stdin.read().replace('\t', ' ').replace('\n', '; ')
         return Board(np.matrix(parsed_input[:-2]), size)
-    # TODO: outros metodos da classe
 
 
 class Takuzu(Problem):
     def __init__(self, board: Board):
         """O construtor especifica o estado inicial."""
-        # TODO
-        pass
+        self.initial = TakuzuState(board)
 
     def actions(self, state: TakuzuState):
         """Retorna uma lista de ações que podem ser executadas a
         partir do estado passado como argumento."""
-        # TODO
-        pass
+        var = state.get_var()
+        return [(var.pos[0], var.pos[1], num) for num in var.domain]
 
     def result(self, state: TakuzuState, action):
         """Retorna o estado resultante de executar a 'action' sobre
         'state' passado como argumento. A ação a executar deve ser uma
         das presentes na lista obtida pela execução de
         self.actions(state)."""
-        # TODO
-        pass
+        new_board = Board(state.board.board.copy(), state.board.size)
+        new_board.insert(action[0], action[1], action[2])
+        return TakuzuState(new_board)
+        
 
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
         estão preenchidas com uma sequência de números adjacentes."""
-        # TODO
-        pass
+        return not bool(state.board.get_empty_pos())
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
         # TODO
         pass
 
-    # TODO: outros metodos da classe
 
 class UnassignedVariable:
     
     def __init__(self, pos, poss_vals, num_constr):
         self.pos = pos
-        self.poss = poss_vals
+        self.domain = poss_vals
         self.num_constr = num_constr
         
     def __lt__(self, other):
-        return len(self.poss_vals) < len(other.poss_vals) or (len(self.poss_vals) == len(other.poss_vals) and self.num_constr > other.num_constr)
+        return len(self.domain) < len(other.domain) or (len(self.domain) == len(other.domain) and self.num_constr > other.num_constr)
+
+    def __str__(self):
+        return ' '.join(str(self.pos) + str(self.domain) + str(self.num_constr))
+
 
 if __name__ == "__main__":
     # TODO:
@@ -172,4 +193,7 @@ if __name__ == "__main__":
     # Usar uma técnica de procura para resolver a instância,
     # Retirar a solução a partir do nó resultante,
     # Imprimir para o standard output no formato indicado.
-    pass
+    board = Board.parse_instance_from_stdin()
+    problem = Takuzu(board)
+    goal_node = depth_first_tree_search(problem)
+    print(goal_node.state.board)

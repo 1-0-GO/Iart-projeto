@@ -6,7 +6,8 @@ Created on Sun Jun  5 14:38:41 2022
 """
 import numpy as np
 import sys
-from takuzu import Board
+from takuzu import Board, TakuzuState, Takuzu
+from search import depth_first_tree_search
 
 
 #print(sum(map(lambda x: x==2, [2,2,4,3])))
@@ -20,8 +21,8 @@ from takuzu import Board
 #print(a)
 #print(b)
 
-board = Board.parse_instance_from_stdin() 
-print(board)
+# board = Board.parse_instance_from_stdin() 
+# print(board)
 # print(sum(map(lambda x: x==2, board.board[0, :])))
 #print(board.count_constraints(11, 9))
 # print(board.general_adjacent_numbers('v', 1, 2, 2))
@@ -37,4 +38,23 @@ print(board)
 # print(np.bincount(a))
 # for i in range(3):    
 #     print(np.bincount(np.ravel(board.board[i,:])))
-print(board.possible_values(0, 0))
+# print(board.possible_values(0, 0))
+# print(max(map(lambda x: x**2, [0,3,2,5,6])))
+# initial_state = TakuzuState(board)
+# problem = Takuzu(board)
+# for action in problem.actions(initial_state):
+#     print('\n', problem.result(initial_state, action).board)
+# b = np.matrix('1 0 1; 1 0 1; 1 2 1')
+# print(any(np.equal(b.T, [1, 2, 0]).all(1)))
+# print(np.unique(b, axis = 0))
+# print(not bool(np.argwhere(b==0).tolist())) 
+# board = Board(b, 3) 
+# print(board.possible_values(1, 1))
+# print(sum(np.equal(b, b[1, :]).all(1))[0,0])
+
+problem = Takuzu(Board.parse_instance_from_stdin())
+goal_node = depth_first_tree_search(problem)
+print(goal_node.state.board, sep="")
+# print(np.unique(goal_node.state.board.board, axis = 0).shape == goal_node.state.board.board.shape)
+
+    
