@@ -4,11 +4,19 @@ Created on Sun Jun  5 14:38:41 2022
 
 @author: marti
 """
+import os
 import numpy as np
 import sys
 from takuzu import Board, TakuzuState, Takuzu
-from search import depth_first_tree_search, astar_search
-
+from search import (
+    astar_search,
+    breadth_first_tree_search,
+    depth_first_tree_search,
+    greedy_search,
+    recursive_best_first_search,
+    compare_searchers,
+    compare_graph_searchers
+)
 
 #print(sum(map(lambda x: x==2, [2,2,4,3])))
 #new_str = "2\t1\t2\t0\n2\t2\t0\t2\n2\t0\t2\t2\n1\t1\t2\t0\n".replace('\t', ' ').replace('\n', '; ')[:-2]
@@ -56,10 +64,23 @@ from search import depth_first_tree_search, astar_search
 # print(stat.board)
 # print(stat.count_poss_nums_in_all_empty_boxes())
 
-problem = Takuzu(Board.parse_instance_from_stdin())
-goal_node = astar_search(problem)
-print(goal_node.state.board, sep="")
+# problem = Takuzu(Board.parse_instance_from_stdin())
+# goal_node = astar_search(problem)
+# print(goal_node.state.board, sep="")
 # print(np.unique(goal_node.state.board.board, axis = 0).shape == goal_node.state.board.board.shape)
 
-
-    
+boards = []
+dire = "../testes-takuzu"
+for name in os.listdir(dire):
+    if name[0] == 'i':    
+        with open(os.path.join(dire, name), 'r') as f:        
+            size = int(f.readline())
+            parsed_input = f.read().replace('\t', ' ').replace('\n', '; ')
+            boards.append(Board(np.matrix(parsed_input[:-2]), size))
+problems = [Takuzu(bo) for bo in boards]
+header = ['Searcher']
+other_header = ['Problem' + str(i) for i in range(1, 1 + len(boards))]
+header.extend(other_header)
+searchers = [breadth_first_tree_search, depth_first_tree_search, greedy_search, astar_search]
+compare_searchers(problems, header, searchers)
+# compare_graph_searchers()
