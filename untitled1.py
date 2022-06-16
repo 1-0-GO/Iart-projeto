@@ -7,7 +7,7 @@ Created on Sun Jun  5 14:38:41 2022
 import numpy as np
 import sys
 from takuzu import Board, TakuzuState, Takuzu
-from search import depth_first_tree_search
+from search import depth_first_tree_search, astar_search
 
 
 #print(sum(map(lambda x: x==2, [2,2,4,3])))
@@ -52,9 +52,14 @@ from search import depth_first_tree_search
 # print(board.possible_values(1, 1))
 # print(sum(np.equal(b, b[1, :]).all(1))[0,0])
 
+# stat = TakuzuState(Board.parse_instance_from_stdin())
+# print(stat.board)
+# print(stat.count_poss_nums_in_all_empty_boxes())
+
 problem = Takuzu(Board.parse_instance_from_stdin())
-goal_node = depth_first_tree_search(problem)
+goal_node = astar_search(problem)
 print(goal_node.state.board, sep="")
 # print(np.unique(goal_node.state.board.board, axis = 0).shape == goal_node.state.board.board.shape)
+
 
     

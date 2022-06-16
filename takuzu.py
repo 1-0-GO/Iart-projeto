@@ -25,6 +25,7 @@ class TakuzuState:
     def __init__(self, board):
         self.board = board
         self.id = TakuzuState.state_id
+        self.unass_vars = list(map(lambda x: UnassignedVariable(x, self.board.possible_values(x[0], x[1]), self.board.count_constraints(x[0], x[1])), self.board.get_empty_pos()))
         self.var = None
         TakuzuState.state_id += 1
 
@@ -33,8 +34,11 @@ class TakuzuState:
     
     def get_var(self):
         if self.var == None:
-            self.var = min(map(lambda x: UnassignedVariable(x, self.board.possible_values(x[0], x[1]), self.board.count_constraints(x[0], x[1])), self.board.get_empty_pos()))
+            self.var = min(self.unass_vars)
         return self.var    
+    
+    def count_poss_nums_in_all_empty_boxes(self):
+        return sum(map(lambda x: len(x.domain), self.unass_vars))
 
 
 class Board:
@@ -169,9 +173,10 @@ class Takuzu(Problem):
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
-        # TODO
-        pass
-
+        try:
+            return .5*(node.parent.state.count_poss_nums_in_all_empty_boxes() - node.state.count_poss_nums_in_all_empty_boxes())
+        except AttributeError:
+            return 0
 
 class UnassignedVariable:
     
@@ -188,12 +193,11 @@ class UnassignedVariable:
 
 
 if __name__ == "__main__":
-    # TODO:
     # Ler o ficheiro de input de sys.argv[1],
     # Usar uma técnica de procura para resolver a instância,
     # Retirar a solução a partir do nó resultante,
     # Imprimir para o standard output no formato indicado.
     board = Board.parse_instance_from_stdin()
     problem = Takuzu(board)
-    goal_node = depth_first_tree_search(problem)
+    goal_node = astar_search(problem)
     print(goal_node.state.board)
