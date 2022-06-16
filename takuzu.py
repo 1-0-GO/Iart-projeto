@@ -2,10 +2,9 @@
 # Devem alterar as classes e funções neste ficheiro de acordo com as instruções do enunciado.
 # Além das funções e classes já definidas, podem acrescentar outras que considerem pertinentes.
 
-# Grupo 00:
-# 00000 Nome1
-# 00000 Nome2
-
+# Grupo 44:
+# 99068 Francisco Martins
+# 93740 Miguel Oliveira
 import sys
 from search import (
     Problem,
@@ -199,5 +198,5 @@ if __name__ == "__main__":
     # Imprimir para o standard output no formato indicado.
     board = Board.parse_instance_from_stdin()
     problem = Takuzu(board)
-    goal_node = astar_search(problem)
+    goal_node = greedy_search(problem)
     print(goal_node.state.board)
