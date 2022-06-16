@@ -65,7 +65,7 @@ from search import (
 # print(stat.count_poss_nums_in_all_empty_boxes())
 
 # problem = Takuzu(Board.parse_instance_from_stdin())
-# goal_node = astar_search(problem)
+# goal_node = greedy_search(problem)
 # print(goal_node.state.board, sep="")
 # print(np.unique(goal_node.state.board.board, axis = 0).shape == goal_node.state.board.board.shape)
 
@@ -83,4 +83,4 @@ other_header = ['Problem' + str(i) for i in range(1, 1 + len(boards))]
 header.extend(other_header)
 searchers = [breadth_first_tree_search, depth_first_tree_search, greedy_search, astar_search]
 compare_searchers(problems, header, searchers)
-# compare_graph_searchers()
+compare_graph_searchers()

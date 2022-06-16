@@ -32,11 +32,15 @@ class TakuzuState:
         return self.id < other.id
     
     def get_var(self):
+        """Retorna a variável a alterar neste estado de acordo 
+        com as heurísticas MRV e maior grau para desempate"""
         if self.var == None:
             self.var = min(self.unass_vars)
         return self.var    
     
     def count_poss_nums_in_all_empty_boxes(self):
+        """Devolve o número de números possíveis em todas 
+        as posições livres"""
         return sum(map(lambda x: len(x.domain), self.unass_vars))
 
 
@@ -65,6 +69,8 @@ class Board:
         return self.general_adjacent_numbers('h', row, col, 1)
     
     def general_adjacent_numbers(self, mode, row: int, col: int, radius: int):
+        """Devolve os valores na vertical ou na horizontal, 
+        dependendo do modo, que estão à volta da posição indicada"""
         matrix = self.board
         if mode == 'v':
             matrix = self.board.T
@@ -81,18 +87,23 @@ class Board:
         return tuple(adj)      
     
     def get_empty_pos(self):
+        """Devolve todas as posições livres no tabuleiro"""
         return np.argwhere(self.board==2).tolist()
     
     def get_bincount_of_row(self, row):
+        """Devolve contagem de 0's, 1's e 2's na linha indicada"""
         return np.bincount(np.ravel(self.board[row, :]))  
     
     def get_bincount_of_col(self, col):
+        """Devolve contagem de 0's, 1's e 2's na coluna indicada"""
         return np.bincount(np.ravel(self.board[:, col]))  
     
     def count_constraints(self, row, col):
+        """Devolve número de restrições na posição indicada"""
         return sum(map(lambda x: x==2, self.general_adjacent_numbers('h', row, col, 2))) + sum(map(lambda x: x==2, self.general_adjacent_numbers('v', row, col, 2))) 
      
     def possible_values(self, row, col):
+        """Devolve os valores possíveis para a posição indicada"""
         poss = [0, 1]
         n = self.size//2 + 1 if self.size%2 else self.size/2
         bins = self.get_bincount_of_col(col), self.get_bincount_of_row(row)
@@ -178,6 +189,7 @@ class Takuzu(Problem):
             return 0
 
 class UnassignedVariable:
+    """Representação de uma posição vazia no tabuleiro"""
     
     def __init__(self, pos, poss_vals, num_constr):
         self.pos = pos
@@ -185,6 +197,8 @@ class UnassignedVariable:
         self.num_constr = num_constr
         
     def __lt__(self, other):
+        """Comparação entre duas variáveis pelas heurísticas 
+        MRV e maior grau para desempate"""
         return len(self.domain) < len(other.domain) or (len(self.domain) == len(other.domain) and self.num_constr > other.num_constr)
 
     def __str__(self):
