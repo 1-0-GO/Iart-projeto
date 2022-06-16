@@ -87,7 +87,7 @@ class Board:
         return np.bincount(np.ravel(self.board[:, col]))  
     
     def count_constraints(self, row, col):
-        return sum(map(lambda x: x==2, self.general_adjacent_numbers('h', row, col, 2))) + sum(map(lambda x: x==2, self.general_adjacent_numbers('v', row, col, 2))) + bool(self.get_bincount_of_col(col)[2] - 1) + bool(self.get_bincount_of_row(row)[2] - 1)
+        return sum(map(lambda x: x==2, self.general_adjacent_numbers('h', row, col, 2))) + sum(map(lambda x: x==2, self.general_adjacent_numbers('v', row, col, 2))) 
      
     def possible_values(self, row, col):
         poss = [0, 1]
