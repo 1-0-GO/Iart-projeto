@@ -202,7 +202,6 @@ def depth_first_tree_search(problem):
     The argument frontier should be an empty queue.
     Repeats infinitely in case of loops.
     """
-
     frontier = [Node(problem.initial)]  # Stack
 
     while frontier:
@@ -1516,7 +1515,6 @@ def mutate_boggle(board):
 
 # Code to compare searchers on various problems.
 
-
 class InstrumentedProblem(Problem):
     """Delegates to a problem, and keeps statistics."""
 
@@ -1564,6 +1562,7 @@ def compare_searchers(problems, header,
     def do(searcher, problem):
         p = InstrumentedProblem(problem)
         searcher(p)
+        print(p)
         return p
 
     table = [[name(s)] + [do(s, p) for p in problems] for s in searchers]

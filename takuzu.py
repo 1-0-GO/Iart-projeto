@@ -174,7 +174,6 @@ class Takuzu(Problem):
         new_board.insert(action[0], action[1], action[2])
         return TakuzuState(new_board)
         
-
     def goal_test(self, state: TakuzuState):
         """Retorna True se e só se o estado passado como argumento é
         um estado objetivo. Deve verificar se todas as posições do tabuleiro
@@ -187,6 +186,7 @@ class Takuzu(Problem):
             return .5*(node.parent.state.count_poss_nums_in_all_empty_boxes() - node.state.count_poss_nums_in_all_empty_boxes())
         except AttributeError:
             return 0
+
 
 class UnassignedVariable:
     """Representação de uma posição vazia no tabuleiro"""
