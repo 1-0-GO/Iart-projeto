@@ -1562,7 +1562,6 @@ def compare_searchers(problems, header,
     def do(searcher, problem):
         p = InstrumentedProblem(problem)
         searcher(p)
-        print(p)
         return p
 
     table = [[name(s)] + [do(s, p) for p in problems] for s in searchers]

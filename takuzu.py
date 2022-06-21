@@ -183,7 +183,7 @@ class Takuzu(Problem):
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
         try:
-            return .5*(node.parent.state.count_poss_nums_in_all_empty_boxes() - node.state.count_poss_nums_in_all_empty_boxes())
+            return len(node.state.unass_vars)+.5*(node.parent.state.count_poss_nums_in_all_empty_boxes() - node.state.count_poss_nums_in_all_empty_boxes())
         except AttributeError:
             return 0
 
