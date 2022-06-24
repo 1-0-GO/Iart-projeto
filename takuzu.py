@@ -182,13 +182,7 @@ class Takuzu(Problem):
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
-        try:
-            num_unass_vars = len(node.state.unass_vars)
-            return num_unass_vars - 2 + (node.parent.state.count_poss_nums_in_all_empty_boxes() - node.state.count_poss_nums_in_all_empty_boxes())/num_unass_vars
-        except AttributeError:
-            return num_unass_vars
-        except ZeroDivisionError:
-            return 0 
+        return len(node.state.unass_vars)
 
 class UnassignedVariable:
     """Representação de uma posição vazia no tabuleiro"""
