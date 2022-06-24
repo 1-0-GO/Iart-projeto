@@ -82,7 +82,7 @@ def make_emptier(mat):
 boards = []
 dire = "../testes-takuzu"
 
-""" for name in os.listdir(dire):
+for name in os.listdir(dire):
     if name[0] == 'i':    
         with open(os.path.join(dire, name), 'r') as f:        
             size = int(f.readline())
@@ -94,11 +94,10 @@ other_header = ['Problem' + str(i) for i in range(1, 1 + len(boards))]
 header.extend(other_header)
 searchers = [breadth_first_tree_search, depth_first_tree_search, greedy_search, astar_search]
 compare_searchers(problems, header, searchers)
- """
 
 
-board = make_emptier(Board.parse_instance_from_stdin().board)
-print(len(Board(board, 8).get_empty_pos()))
+# board = make_emptier(Board.parse_instance_from_stdin().board)
+# print(len(Board(board, 8).get_empty_pos()))
 
 # bo = Board(make_emptier(np.matrix('2 1 1 0 1; 2 1 0 2 0; 2 0 1 0 2; 2 1 2 1 0; 2 1 1 0 2')), 4)
 # print(bo)
