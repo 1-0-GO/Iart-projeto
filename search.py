@@ -8,6 +8,7 @@ functions.
 
 import sys
 from collections import deque
+from datetime import datetime
 
 from utils import *
 
@@ -1562,7 +1563,12 @@ def compare_searchers(problems, header,
     def do(searcher, problem):
         p = InstrumentedProblem(problem)
         searcher(p)
-        return p
+        t0=datetime.now()
+        searcher(problem)
+        t1=datetime.now()
+        delta=t1-t0
+        milli=delta.seconds*1000+delta.microseconds/1000.0
+        return str(p)+f'/{milli}'
 
     table = [[name(s)] + [do(s, p) for p in problems] for s in searchers]
     print_table(table, header)

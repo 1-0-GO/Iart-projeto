@@ -18,7 +18,10 @@ from search import (
     compare_graph_searchers,
     InstrumentedProblem
 )
+from utils import print_table, name
 from random import choices, seed
+from timeit import timeit
+from  datetime import datetime
 
 #print(sum(map(lambda x: x==2, [2,2,4,3])))
 #new_str = "2\t1\t2\t0\n2\t2\t0\t2\n2\t0\t2\t2\n1\t1\t2\t0\n".replace('\t', ' ').replace('\n', '; ')[:-2]
@@ -88,13 +91,23 @@ for name in os.listdir(dire):
             size = int(f.readline())
             parsed_input = f.read().replace('\t', ' ').replace('\n', '; ')
             boards.append(Board(make_emptier(np.matrix(parsed_input[:-2])), size))
-problems = [Takuzu(bo) for bo in boards[:-3]]
+problems = [Takuzu(bo) for bo in boards[:-2]]
 header = ['Searcher']
 other_header = ['Problem' + str(i) for i in range(1, 1 + len(boards))]
 header.extend(other_header)
 searchers = [breadth_first_tree_search, depth_first_tree_search, greedy_search, astar_search]
 compare_searchers(problems, header, searchers)
-
+# table=[]
+# for s in searchers:
+#     line=[]
+#     for b in boards[1:3]:
+#         t0=datetime.now()
+#         s(Takuzu(b))
+#         t1=datetime.now()
+#         delta=t1-t0
+#         line.append(delta.seconds*1000+delta.microseconds/1000.0)
+#     table.append(line)    
+# print_table(table)
 
 # board = make_emptier(Board.parse_instance_from_stdin().board)
 # print(len(Board(board, 8).get_empty_pos()))
