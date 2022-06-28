@@ -7,7 +7,7 @@ Created on Sun Jun  5 14:38:41 2022
 import os
 import numpy as np
 import sys
-from takuzu import Board, TakuzuState, Takuzu
+from takuzu2 import Board, TakuzuState, Takuzu
 from search import (
     astar_search,
     breadth_first_tree_search,
@@ -90,12 +90,12 @@ for name in os.listdir(dire):
         with open(os.path.join(dire, name), 'r') as f:        
             size = int(f.readline())
             parsed_input = f.read().replace('\t', ' ').replace('\n', '; ')
-            boards.append(Board(make_emptier(np.matrix(parsed_input[:-2])), size))
-problems = [Takuzu(bo) for bo in boards[:-2]]
+            boards.append(Board(np.matrix(parsed_input[:-2]), size))
+problems = [Takuzu(bo) for bo in boards[:-4]]
 header = ['Searcher']
 other_header = ['Problem' + str(i) for i in range(1, 1 + len(boards))]
 header.extend(other_header)
-searchers = [breadth_first_tree_search, depth_first_tree_search, greedy_search, astar_search]
+searchers = [greedy_search, astar_search]
 compare_searchers(problems, header, searchers)
 # table=[]
 # for s in searchers:

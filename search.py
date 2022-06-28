@@ -9,7 +9,6 @@ functions.
 import sys
 from collections import deque
 from datetime import datetime
-
 from utils import *
 
 
@@ -203,6 +202,7 @@ def depth_first_tree_search(problem):
     The argument frontier should be an empty queue.
     Repeats infinitely in case of loops.
     """
+
     frontier = [Node(problem.initial)]  # Stack
 
     while frontier:
@@ -1516,6 +1516,7 @@ def mutate_boggle(board):
 
 # Code to compare searchers on various problems.
 
+
 class InstrumentedProblem(Problem):
     """Delegates to a problem, and keeps statistics."""
 
@@ -1549,8 +1550,8 @@ class InstrumentedProblem(Problem):
         return getattr(self.problem, attr)
 
     def __repr__(self):
-        return '<{:4d}/{:4d}/{:4d}/{}>'.format(self.succs, self.goal_tests,
-                                               self.states, str(self.found)[:4])
+        return '<{:4d}/{:4d}/{:4d}>'.format(self.succs, self.goal_tests,
+                                               self.states)
 
 
 def compare_searchers(problems, header,

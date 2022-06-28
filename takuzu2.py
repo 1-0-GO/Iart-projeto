@@ -35,7 +35,7 @@ class TakuzuState:
         """Retorna a variável a alterar neste estado de acordo 
         com as heurísticas MRV e maior grau para desempate"""
         if self.var == None:
-            self.var = min(self.unass_vars)
+            self.var = self.unass_vars[0]
         return self.var    
     
     def count_poss_nums_in_all_empty_boxes(self):
@@ -184,18 +184,7 @@ class Takuzu(Problem):
 
     def h(self, node: Node):
         """Função heuristica utilizada para a procura A*."""
-        try:
-            num_unass_vars = len(node.state.unass_vars) 
-            h = num_unass_vars - 2 + (node.parent.state.count_poss_nums_in_all_empty_boxes() - node.state.count_poss_nums_in_all_empty_boxes())/(num_unass_vars + 1.0)   
-            if num_unass_vars < h:
-                print('----------')
-                print(node.parent.state)
-                print(f"unass: {num_unass_vars}, KO: {node.parent.state.count_poss_nums_in_all_empty_boxes() - node.state.count_poss_nums_in_all_empty_boxes()}, h: {h}")
-                print(node.state)
-                print('----------')
-            return h
-        except AttributeError:
-            return num_unass_vars
+        return len(node.state.unass_vars) 
 
 class UnassignedVariable:
     """Representação de uma posição vazia no tabuleiro"""
@@ -223,14 +212,3 @@ if __name__ == "__main__":
     problem = Takuzu(board)
     goal_node = greedy_search(problem)
     print(goal_node.state.board)
-
-"""
-            if num_unass_vars < h:
-                print('----------')
-                print(node.parent.state)
-                print(f"unass: {num_unass_vars}, KO: {node.parent.state.count_poss_nums_in_all_empty_boxes() - node.state.count_poss_nums_in_all_empty_boxes()}, h: {h}")
-                print(node.state)
-                print('----------')
-            if num_unass_vars == h:
-                print('Equal') 
-"""
